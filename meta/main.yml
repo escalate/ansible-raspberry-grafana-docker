@@ -13,6 +13,8 @@ galaxy_info:
   galaxy_tags:
     - raspbian
     - raspberry
+    - pi
+    - raspberrypi
     - docker
     - grafana
 dependencies: []
