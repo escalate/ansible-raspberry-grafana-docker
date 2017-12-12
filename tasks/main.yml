@@ -1,0 +1,135 @@
+---
+
+- name: Load Grafana settings for ARMv7 systems
+  include_vars:
+    file: armv7.yml
+  when: ansible_architecture == 'armv7l'
+  tags:
+    - grafana
+
+- name: Create Grafana folder structure
+  file:
+    path: "{{item}}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - "{{grafana_path}}"
+    - "{{grafana_dashboards_path}}"
+    - "{{grafana_etc_path}}"
+  tags:
+    - grafana
+
+- name: Configure Grafana
+  ini_file:
+    dest: "{{grafana_etc_path}}/custom.ini"
+    section: "{{item.section}}"
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{grafana_config}}"
+  tags:
+    - grafana
+
+- name: Provision Grafana dashboards
+  copy:
+    src: "{{item}}"
+    dest: "{{grafana_dashboards_path}}"
+    owner: root
+    group: root
+    mode: 0644
+  with_fileglob:
+    - dashboards/*.json
+  tags:
+    - grafana
+
+- name: Run Grafana Docker container
+  docker_container:
+    name: grafana
+    image: "{{grafana_docker_image_name}}:{{grafana_docker_image_version}}"
+    state: started
+    pull: yes
+    recreate: yes
+    published_ports:
+      - 3000:3000
+    env:
+      GF_PATHS_CONFIG: /data/etc/custom.ini
+    volumes:
+      - "{{grafana_dashboards_path}}:/data/dashboards"
+      - "{{grafana_etc_path}}:/data/etc"
+  tags:
+    - grafana
+
+- name: Wait for Grafana service startup
+  uri:
+    url: "http://localhost:3000/login"
+    status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 60
+  delay: 5
+  tags:
+    - grafana
+
+- name: Get Grafana global users
+  uri:
+    url: http://localhost:3000/api/org/users
+    method: GET
+    user: "{{grafana_admin_user}}"
+    password: "{{grafana_admin_password}}"
+    force_basic_auth: yes
+    status_code: 200
+    return_content: yes
+  register: grafana_users_output
+  tags:
+    - grafana
+
+- name: Add Grafana global users
+  uri:
+    url: http://localhost:3000/api/admin/users
+    method: POST
+    user: "{{grafana_admin_user}}"
+    password: "{{grafana_admin_password}}"
+    force_basic_auth: yes
+    headers:
+      Content-Type: application/json
+    body_format: json
+    body: {"name":"{{item.name}}","email":"{{item.email}}","login":"{{item.login}}","password":"{{item.password}}"}
+    status_code: 200
+  with_items: "{{grafana_users}}"
+  when: item.login not in (grafana_users_output.json | map(attribute='login') | list)
+  tags:
+    - grafana
+
+- name: Get Grafana datasources
+  uri:
+    url: http://localhost:3000/api/datasources
+    method: GET
+    user: "{{grafana_admin_user}}"
+    password: "{{grafana_admin_password}}"
+    force_basic_auth: yes
+    status_code: 200
+    return_content: yes
+  register: grafana_datasources_output
+  tags:
+    - grafana
+
+- name: Add Grafana datasources
+  uri:
+    url: http://localhost:3000/api/datasources
+    method: POST
+    user: "{{grafana_admin_user}}"
+    password: "{{grafana_admin_password}}"
+    force_basic_auth: yes
+    headers:
+      Content-Type: application/json
+    body_format: json
+    body: {"name":"{{item.database}}","type":"{{item.type}}","url":"{{item.url}}","access":"proxy","basicAuth":false,"database":"{{item.database}}","user":"{{item.user}}","password":"{{item.password}}"}
+    status_code: 200
+  with_items: "{{grafana_datasources}}"
+  when: item.database not in (grafana_datasources_output.json | map(attribute='name') | list)
+  tags:
+    - grafana

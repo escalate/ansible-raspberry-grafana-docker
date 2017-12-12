@@ -1,0 +1,15 @@
+---
+
+grafana_docker_image_version: latest
+grafana_docker_image_name: grafana/grafana
+
+grafana_admin_user: admin
+grafana_admin_password: admin
+
+grafana_path: /opt/grafana
+grafana_dashboards_path: "{{grafana_path}}/dashboards"
+grafana_etc_path: "{{grafana_path}}/etc"
+
+grafana_config: []
+grafana_datasources: []
+grafana_users: []

@@ -1,0 +1,18 @@
+galaxy_info:
+  author: Felix Boerner
+  description: Manage provision of Grafana with Docker
+  company: Felix Boerner
+  license: MIT
+  min_ansible_version: 2.4
+  github_branch: master
+  platforms:
+   - name: Debian
+     versions:
+       - jessie
+       - stretch
+  galaxy_tags:
+    - raspbian
+    - raspberry
+    - docker
+    - grafana
+dependencies: []
