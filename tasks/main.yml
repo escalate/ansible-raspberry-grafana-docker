@@ -31,6 +31,7 @@
     group: root
     mode: 0644
   with_items: "{{grafana_config}}"
+  notify: Restart Grafana service
   tags:
     - grafana
 
@@ -46,20 +47,27 @@
   tags:
     - grafana
 
-- name: Run Grafana Docker container
-  docker_container:
-    name: grafana
-    image: "{{grafana_docker_image_name}}:{{grafana_docker_image_version}}"
+- name: Create Grafana startup script
+  template:
+    src: docker.grafana.service.j2
+    dest: /etc/systemd/system/docker.grafana.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Reload Systemd daemon
+    - Restart Grafana service
+  tags:
+    - grafana
+
+- name: Force all notified handlers to run at this point
+  meta: flush_handlers
+
+- name: Start Grafana service
+  service:
+    name: docker.grafana
     state: started
-    pull: yes
-    recreate: yes
-    published_ports:
-      - 3000:3000
-    env:
-      GF_PATHS_CONFIG: /data/etc/custom.ini
-    volumes:
-      - "{{grafana_dashboards_path}}:/data/dashboards"
-      - "{{grafana_etc_path}}:/data/etc"
+    enabled: yes
   tags:
     - grafana
 

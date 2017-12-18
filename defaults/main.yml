@@ -2,6 +2,8 @@
 
 grafana_docker_image_version: latest
 grafana_docker_image_name: grafana/grafana
+grafana_docker_run_options: "--publish=3000:3000 --volume={{grafana_dashboards_path}}:/data/dashboards --volume={{grafana_etc_path}}:/data/etc --env=GF_PATHS_CONFIG=/data/etc/custom.ini"
+grafana_docker_restart_container: no
 
 grafana_admin_user: admin
 grafana_admin_password: admin

@@ -1,0 +1,16 @@
+[Unit]
+Description=Docker Grafana Container
+After=docker.service
+Requires=docker.service
+
+[Service]
+ExecStartPre=-/usr/bin/docker stop %n
+ExecStartPre=-/usr/bin/docker rm %n
+ExecStartPre=/usr/bin/docker pull {{grafana_docker_image_name}}:{{grafana_docker_image_version}}
+ExecStart=/usr/bin/docker run --init --name %n {{grafana_docker_run_options}} {{grafana_docker_image_name}}:{{grafana_docker_image_version}}
+ExecStop=/usr/bin/docker stop %n
+TimeoutStartSec=0
+Restart={{grafana_docker_restart_container}}
+
+[Install]
+WantedBy=multi-user.target
