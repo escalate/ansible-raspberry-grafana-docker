@@ -46,6 +46,7 @@
     - dashboards/*.json
   tags:
     - grafana
+    - dashboards
 
 - name: Create Grafana startup script
   template:
