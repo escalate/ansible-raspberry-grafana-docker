@@ -23,7 +23,7 @@
 
 - name: Configure Grafana
   ini_file:
-    dest: "{{grafana_etc_path}}/custom.ini"
+    dest: "{{grafana_etc_path}}/grafana.ini"
     section: "{{item.section}}"
     option: "{{item.option}}"
     value: "{{item.value}}"
