@@ -22,15 +22,12 @@
     - grafana
 
 - name: Configure Grafana
-  ini_file:
-    dest: "{{grafana_etc_path}}/grafana.ini"
-    section: "{{item.section}}"
-    option: "{{item.option}}"
-    value: "{{item.value}}"
+  template:
+    src: grafana.env.j2
+    dest: "{{grafana_etc_path}}/grafana.env"
     owner: root
     group: root
     mode: 0644
-  with_items: "{{grafana_config}}"
   notify: Restart Grafana service
   tags:
     - grafana
