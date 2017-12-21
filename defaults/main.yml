@@ -2,7 +2,7 @@
 
 grafana_docker_image_version: latest
 grafana_docker_image_name: grafana/grafana
-grafana_docker_run_options: "--publish=3000:3000 --volume={{grafana_dashboards_path}}:/dashboards"
+grafana_docker_run_options: "--publish=3000:3000 --volume={{grafana_dashboards_path}}:/dashboards --volume={{grafana_path}}/data:/var/lib/grafana"
 grafana_docker_restart_container: always
 
 grafana_admin_user: admin
