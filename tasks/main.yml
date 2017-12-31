@@ -139,3 +139,12 @@
   when: item.database not in (grafana_datasources_output.json | map(attribute='name') | list)
   tags:
     - grafana
+
+- name: Install Grafana plugins
+  command: "docker exec -i docker.grafana.service grafana-cli plugins install {{item}}"
+  args:
+    creates: "{{grafana_data_path}}/plugins/{{item}}"
+  with_items: "{{grafana_plugins}}"
+  notify: Restart Grafana service
+  tags:
+    - grafana

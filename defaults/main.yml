@@ -16,4 +16,5 @@ grafana_etc_path: "{{grafana_path}}/etc"
 
 grafana_config_env: []
 grafana_datasources: []
+grafana_plugins: []
 grafana_users: []
