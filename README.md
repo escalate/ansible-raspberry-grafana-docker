@@ -1,7 +1,7 @@
 # Ansible Role: grafana-docker
 
-An Ansible role that manages provision of Grafana with Docker on Raspbian and Debian OS.
-This role should be compatible with OS version Stretch (9) and Jessie (8).
+An Ansible role that manages Grafana Docker container with systemd on Raspbian and Debian OS.
+This role is compatible with OS version Stretch (9) and Jessie (8).
 
 ## Requirements
 
