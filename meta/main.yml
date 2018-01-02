@@ -1,6 +1,6 @@
 galaxy_info:
   author: Felix Boerner
-  description: Manage provision of Grafana with Docker
+  description: Manages Grafana Docker container with systemd on Raspbian and Debian OS
   company: Felix Boerner
   license: MIT
   min_ansible_version: 2.4
