@@ -71,18 +71,19 @@
 
 - name: Wait for Grafana service startup
   uri:
-    url: "http://localhost:{{grafana_docker_published_port}}/login"
+    url: "http://localhost:{{grafana_docker_http_port}}/login"
     status_code: 200
   register: result
   until: result.status == 200
   retries: 60
   delay: 5
+  when: grafana_docker_publish_http_port
   tags:
     - grafana
 
 - name: Get Grafana global users
   uri:
-    url: "http://localhost:{{grafana_docker_published_port}}/api/org/users"
+    url: "http://localhost:{{grafana_docker_http_port}}/api/org/users"
     method: GET
     user: "{{grafana_admin_user}}"
     password: "{{grafana_admin_password}}"
@@ -95,7 +96,7 @@
 
 - name: Add Grafana global users
   uri:
-    url: "http://localhost:{{grafana_docker_published_port}}/api/admin/users"
+    url: "http://localhost:{{grafana_docker_http_port}}/api/admin/users"
     method: POST
     user: "{{grafana_admin_user}}"
     password: "{{grafana_admin_password}}"
@@ -112,7 +113,7 @@
 
 - name: Get Grafana datasources
   uri:
-    url: "http://localhost:{{grafana_docker_published_port}}/api/datasources"
+    url: "http://localhost:{{grafana_docker_http_port}}/api/datasources"
     method: GET
     user: "{{grafana_admin_user}}"
     password: "{{grafana_admin_password}}"
@@ -125,7 +126,7 @@
 
 - name: Add Grafana datasources
   uri:
-    url: "http://localhost:{{grafana_docker_published_port}}/api/datasources"
+    url: "http://localhost:{{grafana_docker_http_port}}/api/datasources"
     method: POST
     user: "{{grafana_admin_user}}"
     password: "{{grafana_admin_password}}"
