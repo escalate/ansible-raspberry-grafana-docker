@@ -9,8 +9,6 @@
     - "{{grafana_path}}"
     - "{{grafana_dashboards_path}}"
     - "{{grafana_etc_path}}"
-  tags:
-    - grafana
 
 - name: Configure Grafana
   template:
@@ -20,8 +18,6 @@
     group: root
     mode: 0644
   notify: Restart Grafana service
-  tags:
-    - grafana
 
 - name: Provision Grafana dashboards
   copy:
@@ -32,9 +28,6 @@
     mode: 0644
   with_fileglob:
     - dashboards/*.json
-  tags:
-    - grafana
-    - dashboards
 
 - name: Create Grafana startup script
   template:
@@ -46,8 +39,6 @@
   notify:
     - Reload Systemd daemon
     - Restart Grafana service
-  tags:
-    - grafana
 
 - name: Force all notified handlers to run at this point
   meta: flush_handlers
@@ -57,8 +48,6 @@
     name: docker.grafana
     state: started
     enabled: yes
-  tags:
-    - grafana
 
 - name: Wait for Grafana service startup
   uri:
@@ -69,8 +58,6 @@
   retries: 60
   delay: 5
   when: grafana_docker_publish_http_port
-  tags:
-    - grafana
 
 - name: Get Grafana global users
   uri:
@@ -82,8 +69,6 @@
     status_code: 200
     return_content: yes
   register: grafana_users_output
-  tags:
-    - grafana
 
 - name: Add Grafana global users
   uri:
@@ -99,8 +84,6 @@
     status_code: 200
   with_items: "{{grafana_users}}"
   when: item.login not in (grafana_users_output.json | map(attribute='login') | list)
-  tags:
-    - grafana
 
 - name: Get Grafana datasources
   uri:
@@ -112,8 +95,6 @@
     status_code: 200
     return_content: yes
   register: grafana_datasources_output
-  tags:
-    - grafana
 
 - name: Add Grafana datasources
   uri:
@@ -129,8 +110,6 @@
     status_code: 200
   with_items: "{{grafana_datasources}}"
   when: item.database not in (grafana_datasources_output.json | map(attribute='name') | list)
-  tags:
-    - grafana
 
 - name: Install Grafana plugins
   command: "docker exec -i docker.grafana.service grafana-cli plugins install {{item}}"
@@ -138,5 +117,3 @@
     creates: "{{grafana_data_path}}/plugins/{{item}}"
   with_items: "{{grafana_plugins}}"
   notify: Restart Grafana service
-  tags:
-    - grafana
