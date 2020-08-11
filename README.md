@@ -1,14 +1,13 @@
 # Ansible Role: grafana-docker
 
-An Ansible role that manages Grafana Docker container with systemd on Raspbian and Debian OS.
-This role is compatible with OS version Stretch (9) and Jessie (8).
+An Ansible role that manages Grafana Docker container on Raspberry Pi OS and Debian based systems.
 
 ## Requirements
 
 The Docker daemon should be already installed and running on the host side.
-I recommend using of the Ansible Galaxy role [angstwad.docker_ubuntu](https://github.com/angstwad/docker.ubuntu) to manage the Docker daemon.
+I recommend using of the Ansible role [escalate.docker](https://github.com/escalate/ansible-docker) to manage the Docker daemon.
 
-This role is tested with Ansible version greater equal 2.4.
+This role is tested with Ansible version greater equal 2.9.
 
 ## Install
 

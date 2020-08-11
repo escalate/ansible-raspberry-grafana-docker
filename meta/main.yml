@@ -1,21 +1,17 @@
 galaxy_info:
   author: Felix Boerner
-  description: Manages Grafana Docker container with systemd on Raspbian and Debian OS
-  company: Felix Boerner
+  description: Manage Grafana Docker container
   license: MIT
-  min_ansible_version: 2.4
+  min_ansible_version: 2.9
   github_branch: master
   platforms:
-   - name: Debian
-     versions:
-       - jessie
-       - stretch
+    - name: Debian
+      versions:
+        - buster
   galaxy_tags:
-    - raspbian
     - raspberry
     - pi
     - raspberrypi
     - docker
-    - systemd
     - grafana
 dependencies: []
