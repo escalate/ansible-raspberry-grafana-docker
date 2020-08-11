@@ -1,5 +1,3 @@
----
-
 grafana_docker_image_version: latest
 grafana_docker_image_name: grafana/grafana
 grafana_docker_publish_http_port: true
