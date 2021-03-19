@@ -1,119 +1,133 @@
-- name: Create Grafana folder structure
-  file:
-    path: "{{item}}"
+- name: Create read-only directories
+  ansible.builtin.file:
+    path: "{{ item }}"
     state: directory
     owner: root
     group: root
     mode: 0755
-  with_items:
-    - "{{grafana_path}}"
-    - "{{grafana_dashboards_path}}"
-    - "{{grafana_etc_path}}"
+  loop:
+    - "{{ grafana_etc_path }}"
+    - "{{ grafana_etc_path }}/dashboards"
+    - "{{ grafana_etc_path }}/provisioning"
+    - "{{ grafana_etc_path }}/provisioning/dashboards"
+    - "{{ grafana_etc_path }}/provisioning/datasources"
+    - "{{ grafana_etc_path }}/provisioning/notifiers"
+    - "{{ grafana_etc_path }}/provisioning/plugins"
 
-- name: Configure Grafana
-  template:
-    src: grafana.env.j2
-    dest: "{{grafana_etc_path}}/grafana.env"
+- name: Create writeable directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: nobody
+    group: nogroup
+    mode: 0755
+  loop:
+    - "{{ grafana_data_path }}"
+
+- name: Create service configuration
+  ansible.builtin.template:
+    src: grafana.ini.j2
+    dest: "{{ grafana_etc_path }}/grafana.ini"
     owner: root
     group: root
     mode: 0644
-  notify: Restart Grafana service
+  no_log: true
+  notify: Restart service
 
-- name: Provision Grafana dashboards
-  copy:
-    src: "{{item}}"
-    dest: "{{grafana_dashboards_path}}"
+- name: Create datasources configuration
+  ansible.builtin.template:
+    src: datasources.yml.j2
+    dest: "{{ grafana_etc_path }}/provisioning/datasources/datasources.yml"
     owner: root
     group: root
+    mode: 0644
+  no_log: true
+  notify: Restart service
+
+- name: Create dashboards configuration
+  ansible.builtin.template:
+    src: dashboards.yml.j2
+    dest: "{{ grafana_etc_path }}/provisioning/dashboards/dashboards.yml"
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart service
+
+- name: Create dashboards
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ grafana_etc_path }}/dashboards"
+    owner: nobody
+    group: nogroup
     mode: 0644
   with_fileglob:
-    - dashboards/*.json
+    - static_files/grafana/*.json
 
-- name: Create Grafana startup script
-  template:
-    src: docker.grafana.service.j2
-    dest: /etc/systemd/system/docker.grafana.service
+- name: Pull Docker image
+  community.general.docker_image:
+    name: "grafana/grafana:{{ grafana_docker_image_version }}"
+    source: pull
+
+- name: Create systemd service
+  ansible.builtin.template:
+    src: grafana.service.j2
+    dest: /etc/systemd/system/grafana.service
     owner: root
     group: root
     mode: 0644
-  notify:
-    - Reload Systemd daemon
-    - Restart Grafana service
+  notify: Restart service
 
-- name: Force all notified handlers to run at this point
-  meta: flush_handlers
-
-- name: Start Grafana service
-  service:
-    name: docker.grafana
+- name: Start and enable service
+  ansible.builtin.systemd:
+    name: grafana
     state: started
-    enabled: yes
+    enabled: true
+    daemon_reload: true
 
-- name: Wait for Grafana service startup
-  uri:
-    url: "http://localhost:{{grafana_docker_http_port}}/login"
-    status_code: 200
+- name: Wait for service to become available
+  ansible.builtin.uri:
+    url: http://localhost:3000
   register: result
   until: result.status == 200
   retries: 60
-  delay: 5
-  when: grafana_docker_publish_http_port
+  delay: 1
 
-- name: Get Grafana global users
-  uri:
-    url: "http://localhost:{{grafana_docker_http_port}}/api/org/users"
+- name: List users
+  ansible.builtin.uri:
+    url: "http://localhost:3000/api/org/users"
     method: GET
-    user: "{{grafana_admin_user}}"
-    password: "{{grafana_admin_password}}"
-    force_basic_auth: yes
+    user: "{{ grafana_admin_user }}"
+    password: "{{ grafana_admin_password }}"
+    force_basic_auth: true
     status_code: 200
-    return_content: yes
-  register: grafana_users_output
+    return_content: true
+  register: grafana_user_list
 
-- name: Add Grafana global users
-  uri:
-    url: "http://localhost:{{grafana_docker_http_port}}/api/admin/users"
+- name: Add users
+  ansible.builtin.uri:
+    url: "http://localhost:3000/api/admin/users"
     method: POST
-    user: "{{grafana_admin_user}}"
-    password: "{{grafana_admin_password}}"
-    force_basic_auth: yes
+    user: "{{ grafana_admin_user }}"
+    password: "{{ grafana_admin_password }}"
+    force_basic_auth: true
     headers:
       Content-Type: application/json
     body_format: json
-    body: {"name":"{{item.name}}","email":"{{item.email}}","login":"{{item.login}}","password":"{{item.password}}"}
+    body: |
+      {
+        "name":"{{ item.name }}",
+        "email":"{{ item.email }}",
+        "login":"{{ item.login }}",
+        "password":"{{ item.password }}"
+      }
     status_code: 200
-  with_items: "{{grafana_users}}"
-  when: item.login not in (grafana_users_output.json | map(attribute='login') | list)
+  loop: "{{ grafana_users }}"
+  when: item.login not in (grafana_user_list.json | map(attribute='login') | list)
 
-- name: Get Grafana datasources
-  uri:
-    url: "http://localhost:{{grafana_docker_http_port}}/api/datasources"
-    method: GET
-    user: "{{grafana_admin_user}}"
-    password: "{{grafana_admin_password}}"
-    force_basic_auth: yes
-    status_code: 200
-    return_content: yes
-  register: grafana_datasources_output
-
-- name: Add Grafana datasources
-  uri:
-    url: "http://localhost:{{grafana_docker_http_port}}/api/datasources"
-    method: POST
-    user: "{{grafana_admin_user}}"
-    password: "{{grafana_admin_password}}"
-    force_basic_auth: yes
-    headers:
-      Content-Type: application/json
-    body_format: json
-    body: {"name":"{{item.database}}","type":"{{item.type}}","url":"{{item.url}}","access":"proxy","basicAuth":false,"database":"{{item.database}}","user":"{{item.user}}","password":"{{item.password}}"}
-    status_code: 200
-  with_items: "{{grafana_datasources}}"
-  when: item.database not in (grafana_datasources_output.json | map(attribute='name') | list)
-
-- name: Install Grafana plugins
-  command: "docker exec -i docker.grafana.service grafana-cli plugins install {{item}}"
+- name: Install plugins
+  ansible.builtin.command: |
+    docker exec --interactive grafana.service \
+    grafana-cli plugins install {{ item }}
   args:
-    creates: "{{grafana_data_path}}/plugins/{{item}}"
-  with_items: "{{grafana_plugins}}"
-  notify: Restart Grafana service
+    creates: "{{ grafana_data_path }}/plugins/{{ item }}"
+  loop: "{{ grafana_plugins }}"

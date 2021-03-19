@@ -1,0 +1,7 @@
+{% for section, values in grafana_config.items() %}
+[{{ section }}]
+{% for option, value in values.items() %}
+{{ option }} = {{ value }}
+{% endfor %}
+
+{% endfor %}

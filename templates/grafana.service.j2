@@ -1,0 +1,29 @@
+[Unit]
+Description=Grafana
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+ExecStartPre=-/usr/bin/docker stop %n
+ExecStartPre=-/usr/bin/docker rm %n
+ExecStartPre=/usr/bin/docker pull grafana/grafana:{{ grafana_docker_image_version }}
+ExecStart=/usr/bin/docker run \
+--init \
+--memory={{ grafana_docker_memory }} \
+--mount=type=bind,source={{ grafana_data_path }},destination=/var/lib/grafana \
+--mount=type=bind,source={{ grafana_etc_path }},destination=/etc/grafana \
+--name %n \
+--publish=3000:3000 \
+--user=nobody:nogroup \
+grafana/grafana:{{ grafana_docker_image_version }}
+ExecStop=/usr/bin/docker stop %n
+SyslogIdentifier=%n
+TimeoutStartSec=infinity
+StartLimitInterval=30
+StartLimitBurst=5
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

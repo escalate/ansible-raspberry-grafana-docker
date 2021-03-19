@@ -1,19 +1,47 @@
 grafana_docker_image_version: latest
-grafana_docker_image_name: grafana/grafana
-grafana_docker_publish_http_port: true
-grafana_docker_http_port: 3000
-grafana_docker_run_options: "--volume={{grafana_data_path}}:/var/lib/grafana --volume={{grafana_dashboards_path}}:/dashboards"
-grafana_docker_restart_container: always
+grafana_docker_memory: 1G
+
+grafana_data_path: /var/lib/grafana
+grafana_etc_path: /etc/grafana
 
 grafana_admin_user: admin
 grafana_admin_password: admin
 
-grafana_path: /opt/grafana
-grafana_dashboards_path: "{{grafana_path}}/dashboards"
-grafana_data_path: "{{grafana_path}}/data"
-grafana_etc_path: "{{grafana_path}}/etc"
+# https://grafana.com/docs/grafana/latest/administration/configuration/
+grafana_config:
+  server:
+    root_url: http://localhost:3000
+  security:
+    admin_user: "{{ grafana_admin_user }}"
+    admin_password: "{{ grafana_admin_password }}"
+  log:
+    level: INFO
 
-grafana_config_env: []
-grafana_datasources: []
-grafana_plugins: []
+# https://grafana.com/docs/grafana/latest/administration/provisioning/#data-sources
+grafana_datasources: {}
+  # apiVersion: 1
+  # datasources:
+  #   - name: Graphite
+  #     type: graphite
+  #     access: proxy
+
+# https://grafana.com/docs/grafana/latest/administration/provisioning/#dashboards
+grafana_dashboards:
+  apiVersion: 1
+  providers:
+    - name: dashboards
+      type: file
+      updateIntervalSeconds: 30
+      options:
+        path: "{{ grafana_etc_path }}/dashboards"
+        foldersFromFilesStructure: true
+
 grafana_users: []
+  # - name: User Fullname
+  #   login: username
+  #   email: user@example.com
+  #   password: pass
+  #   role: Viewer
+
+grafana_plugins: []
+  # - grafana-piechart-panel
