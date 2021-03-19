@@ -1,8 +1,10 @@
 galaxy_info:
+  role_name: grafana
+  namespace: escalate
   author: Felix Boerner
-  description: Manage Grafana Docker container
+  description: Manage Grafana Docker container with systemd on Raspberry Pi OS
   license: MIT
-  min_ansible_version: 2.9
+  min_ansible_version: 2.10
   github_branch: master
   platforms:
     - name: Debian
@@ -12,6 +14,7 @@ galaxy_info:
     - raspberry
     - pi
     - raspberrypi
+    - systemd
     - docker
     - grafana
 dependencies: []
