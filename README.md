@@ -1,34 +1,33 @@
-# Ansible Role: grafana-docker
+# Ansible Role: Raspberry - Grafana (Docker)
 
-An Ansible role that manages Grafana Docker container on Raspberry Pi OS and Debian based systems.
+[![CI](https://github.com/escalate/ansible-raspberry-grafana-docker/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/escalate/ansible-raspberry-grafana-docker/actions/workflows/ci.yml)
 
-## Requirements
-
-The Docker daemon should be already installed and running on the host side.
-I recommend using of the Ansible role [escalate.docker](https://github.com/escalate/ansible-docker) to manage the Docker daemon.
-
-This role is tested with Ansible version greater equal 2.9.
+An Ansible role that manages [Grafana](https://grafana.com/oss/grafana/) Docker container on Raspberry Pi OS.
 
 ## Install
 
 ```
-$ ansible-galaxy install escalate.grafana-docker
+$ ansible-galaxy install escalate.grafana
 ```
 
 ## Role Variables
 
-Please see [defaults/main.yml](https://github.com/escalate/ansible-grafana-docker/blob/master/defaults/main.yml) for a complete list of variables that can be overridden.
+Please see [defaults/main.yml](https://github.com/escalate/ansible-raspberry-grafana-docker/blob/master/defaults/main.yml) for a complete list of variables that can be overridden.
 
 ## Dependencies
 
-None
+This role relies on the following dependencies:
+
+* Roles: [requirements.yml](https://github.com/escalate/ansible-raspberry-grafana-docker/blob/master/requirements.yml)
+* Collections: [collections.yml](https://github.com/escalate/ansible-raspberry-grafana-docker/blob/master/collections.yml)
 
 ## Example Playbook
 
 ```
 - hosts: all
   roles:
-    - escalate.grafana-docker
+    - role: escalate.grafana
+      tags: grafana
 ```
 
 ## License
