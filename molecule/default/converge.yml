@@ -1,5 +1,43 @@
 - name: Converge
   hosts: all
+  vars:
+    grafana_docker_image_version: latest
+    grafana_docker_memory: 1G
+    grafana_data_path: /var/lib/grafana
+    grafana_etc_path: /etc/grafana
+    grafana_admin_user: admin
+    grafana_admin_password: admin
+    grafana_config:
+      server:
+        root_url: http://localhost:3000
+      security:
+        admin_user: "{{ grafana_admin_user }}"
+        admin_password: "{{ grafana_admin_password }}"
+      log:
+        level: INFO
+    grafana_datasources:
+      apiVersion: 1
+      datasources:
+        - name: Graphite
+          type: graphite
+          access: proxy
+    grafana_dashboards:
+      apiVersion: 1
+      providers:
+        - name: dashboards
+          type: file
+          updateIntervalSeconds: 30
+          options:
+            path: "{{ grafana_etc_path }}/dashboards"
+            foldersFromFilesStructure: true
+    grafana_users:
+      - name: User Fullname
+        login: username
+        email: user@example.com
+        password: pass
+        role: Viewer
+    grafana_plugins:
+      - grafana-piechart-panel
   roles:
     - role: ansible-raspberry-grafana-docker
       tags: grafana
