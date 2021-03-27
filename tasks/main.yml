@@ -22,6 +22,7 @@
     group: nogroup
     mode: 0755
   loop:
+    - "{{ grafana_backup_path }}"
     - "{{ grafana_data_path }}"
 
 - name: Create service configuration
@@ -131,3 +132,25 @@
   args:
     creates: "{{ grafana_data_path }}/plugins/{{ item }}"
   loop: "{{ grafana_plugins }}"
+
+- name: Install backup script prerequsite packages
+  ansible.builtin.apt:
+    name: sqlite3
+    state: present
+    update_cache: true
+
+- name: Create backup script
+  ansible.builtin.template:
+    src: backup_grafana.sh.j2
+    dest: /usr/local/bin/backup_grafana.sh
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Add backup cron job
+  ansible.builtin.cron:
+    name: Backup Grafana
+    minute: "0"
+    hour: "4"
+    job: "/usr/local/bin/backup_grafana.sh || echo \"ERROR: A problem occurred during backup of Grafana. Please check the logfiles. journalctl -t backup_grafana.sh\""  # noqa 204
+    user: root

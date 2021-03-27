@@ -1,0 +1,31 @@
+#!/bin/bash
+set -e -E -u -C -o pipefail
+
+exec 1> >(logger -t $(basename $0)) 2>&1
+
+echo "Start Grafana backup job"
+
+BACKUP_DIR="{{ grafana_backup_path }}"
+BACKUP_FILE="{{ grafana_backup_path }}/grafana-db-$(date +%Y-%m-%d-%H-%M).bck"
+
+echo "Stop Grafana service"
+systemctl stop grafana.service
+
+while [ "$(docker ps --all --quiet --filter status=running --filter name=grafana.service)" ]; do
+    echo "Grafana service is still running - wait 5 secs"
+    sleep 5
+done
+
+echo "Start backup of Grafana database"
+sqlite3 "{{ grafana_data_path }}/grafana.db" ".backup ${BACKUP_FILE}"
+
+echo "Start Grafana service"
+systemctl start grafana.service
+
+echo "Compress backup of Grafana database"
+bzip2 "${BACKUP_FILE}"
+
+echo "Delete old Grafana database backups"
+find "${BACKUP_DIR}" -name "grafana_*" -type f -mtime +14 -delete
+
+echo "Finish Grafana backup job"

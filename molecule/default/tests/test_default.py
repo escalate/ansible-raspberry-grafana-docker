@@ -1,6 +1,9 @@
 """Role testing files using testinfra"""
 
 
+import pytest
+
+
 def test_read_only_directories(host):
     """Check read-only directories"""
     f = host.file("/etc/grafana")
@@ -10,9 +13,13 @@ def test_read_only_directories(host):
     assert f.mode == 0o755
 
 
-def test_writeable_directories(host):
+@pytest.mark.parametrize("directory", [
+    ("/var/backups/grafana"),
+    ("/var/lib/grafana")
+])
+def test_writeable_directories(host, directory):
     """Check writeable directories"""
-    f = host.file("/var/lib/grafana")
+    f = host.file(directory)
     assert f.is_directory
     assert f.user == "nobody"
     assert f.group == "nogroup"
@@ -92,3 +99,10 @@ def test_grafana_service(host):
     s = host.service("grafana")
     assert s.is_running
     assert s.is_enabled
+
+
+def test_backup_cron_job(host):
+    """Check backup cron job"""
+    cmd = "/usr/local/bin/backup_grafana.sh"
+    f = host.file("/var/spool/cron/crontabs/root").content_string
+    assert cmd in f
