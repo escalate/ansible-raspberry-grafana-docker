@@ -22,6 +22,10 @@ def test_writeable_directories(host):
 def test_grafana_config(host):
     """Check Grafana config file"""
     f = host.file("/etc/grafana/grafana.ini")
+    assert f.is_file
+    assert f.user == "root"
+    assert f.group == "root"
+
     config = (
                 "[server]\n"
                 "root_url = http://localhost:3000\n"
@@ -39,6 +43,10 @@ def test_grafana_config(host):
 def test_grafana_datasources(host):
     """Check Grafana datasources file"""
     f = host.file("/etc/grafana/provisioning/datasources/datasources.yml")
+    assert f.is_file
+    assert f.user == "root"
+    assert f.group == "root"
+
     config = (
                 "apiVersion: 1\n"
                 "datasources:\n"
@@ -52,6 +60,10 @@ def test_grafana_datasources(host):
 def test_grafana_dashboards(host):
     """Check Grafana dashboards file"""
     f = host.file("/etc/grafana/provisioning/dashboards/dashboards.yml")
+    assert f.is_file
+    assert f.user == "root"
+    assert f.group == "root"
+
     config = (
                 "apiVersion: 1\n"
                 "providers:\n"
