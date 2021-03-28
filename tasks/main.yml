@@ -33,7 +33,7 @@
     group: root
     mode: 0644
   no_log: true
-  notify: Restart service
+  notify: Restart grafana service
 
 - name: Create datasources configuration
   ansible.builtin.template:
@@ -43,7 +43,7 @@
     group: root
     mode: 0644
   no_log: true
-  notify: Restart service
+  notify: Restart grafana service
 
 - name: Create dashboards configuration
   ansible.builtin.template:
@@ -52,7 +52,7 @@
     owner: root
     group: root
     mode: 0644
-  notify: Restart service
+  notify: Restart grafana service
 
 - name: Create dashboards
   ansible.builtin.copy:
@@ -76,7 +76,7 @@
     owner: root
     group: root
     mode: 0644
-  notify: Restart service
+  notify: Restart grafana service
 
 - name: Start and enable service
   ansible.builtin.systemd:
