@@ -3,6 +3,8 @@
   vars:
     grafana_docker_image_version: latest
     grafana_docker_memory: 1G
+    grafana_docker_labels:
+      maintainer: me@example.com
     grafana_data_path: /var/lib/grafana
     grafana_etc_path: /etc/grafana
     grafana_admin_user: admin
@@ -13,8 +15,8 @@
       security:
         admin_user: "{{ grafana_admin_user }}"
         admin_password: "{{ grafana_admin_password }}"
-      log:
-        level: INFO
+    grafana_env_vars:
+      GF_LOG_LEVEL: INFO
     grafana_datasources:
       apiVersion: 1
       datasources:

@@ -40,9 +40,6 @@ def test_grafana_config(host):
                 "[security]\n"
                 "admin_user = admin\n"
                 "admin_password = admin\n"
-                "\n"
-                "[log]\n"
-                "level = INFO\n"
     )
     assert config in f.content_string
 
@@ -99,6 +96,13 @@ def test_grafana_service(host):
     s = host.service("grafana")
     assert s.is_running
     assert s.is_enabled
+
+
+def test_grafana_docker_container(host):
+    """Check Grafana docker container"""
+    d = host.docker("grafana.service").inspect()
+    assert d["Config"]["Labels"] == {'maintainer': '"me@example.com"'}
+    assert "GF_LOG_LEVEL=INFO" in d["Config"]["Env"]
 
 
 def test_backup_cron_job(host):

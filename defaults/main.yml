@@ -1,5 +1,6 @@
 grafana_docker_image_version: latest
 grafana_docker_memory: 1G
+grafana_docker_labels: {}
 
 grafana_backup_path: /var/backups/grafana
 grafana_data_path: /var/lib/grafana
@@ -17,6 +18,8 @@ grafana_config:
     admin_password: "{{ grafana_admin_password }}"
   log:
     level: INFO
+
+grafana_env_vars: {}
 
 # https://grafana.com/docs/grafana/latest/administration/provisioning/#data-sources
 grafana_datasources: {}

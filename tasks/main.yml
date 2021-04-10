@@ -35,6 +35,15 @@
   no_log: true
   notify: Restart grafana service
 
+- name: Define environment variables
+  ansible.builtin.template:
+    src: grafana.env.j2
+    dest: "{{ grafana_etc_path }}/grafana.env"
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart grafana service
+
 - name: Create datasources configuration
   ansible.builtin.template:
     src: datasources.yml.j2
@@ -63,6 +72,15 @@
     mode: 0644
   with_fileglob:
     - static_files/grafana/*.json
+
+- name: Define Docker container labels
+  ansible.builtin.template:
+    src: grafana.label.j2
+    dest: "{{ grafana_etc_path }}/grafana.label"
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart grafana service
 
 - name: Pull Docker image
   community.general.docker_image:
