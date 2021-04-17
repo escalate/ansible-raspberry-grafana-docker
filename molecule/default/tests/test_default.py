@@ -89,10 +89,6 @@ def test_grafana_plugins(host):
 
 def test_grafana_service(host):
     """Check Grafana service"""
-    f = host.file("/etc/systemd/system/grafana.service")
-    assert "--memory=1G" in f.content_string
-    assert "grafana/grafana:latest" in f.content_string
-
     s = host.service("grafana")
     assert s.is_running
     assert s.is_enabled
@@ -101,6 +97,8 @@ def test_grafana_service(host):
 def test_grafana_docker_container(host):
     """Check Grafana docker container"""
     d = host.docker("grafana.service").inspect()
+    assert d["HostConfig"]["Memory"] == 1073741824
+    assert d["Config"]["Image"] == "grafana/grafana:latest"
     assert d["Config"]["Labels"] == {'maintainer': '"me@example.com"'}
     assert "GF_LOG_LEVEL=INFO" in d["Config"]["Env"]
 
