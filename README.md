@@ -1,6 +1,6 @@
-# Ansible Role: Raspberry - Grafana (Docker)
+[![Molecule](https://github.com/escalate/ansible-raspberry-grafana-docker/actions/workflows/molecule.yml/badge.svg?branch=master&event=push)](https://github.com/escalate/ansible-raspberry-grafana-docker/actions/workflows/molecule.yml)
 
-[![CI](https://github.com/escalate/ansible-raspberry-grafana-docker/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/escalate/ansible-raspberry-grafana-docker/actions/workflows/ci.yml)
+# Ansible Role: Raspberry - Grafana (Docker)
 
 An Ansible role that manages [Grafana](https://grafana.com/oss/grafana/) Docker container with systemd on Raspberry Pi OS.
 
