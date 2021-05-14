@@ -14,16 +14,21 @@
     - "{{ grafana_etc_path }}/provisioning/notifiers"
     - "{{ grafana_etc_path }}/provisioning/plugins"
 
-- name: Create writeable directory
+- name: Create writeable data directory
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ grafana_data_path }}"
+    state: directory
+    owner: nobody
+    group: nogroup
+    mode: 0700
+
+- name: Create writeable backup directory
+  ansible.builtin.file:
+    path: "{{ grafana_backup_path }}"
     state: directory
     owner: nobody
     group: nogroup
     mode: 0755
-  loop:
-    - "{{ grafana_backup_path }}"
-    - "{{ grafana_data_path }}"
 
 - name: Create service configuration
   ansible.builtin.template:
