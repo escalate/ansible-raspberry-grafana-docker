@@ -10,7 +10,7 @@ driver:
 lint: |
   set -e
   ec
-  yamllint --strict -c .yamllint .
+  yamllint --strict --config-file .yamllint .
   ansible-lint .
   flake8
 
