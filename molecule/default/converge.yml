@@ -7,6 +7,7 @@
       maintainer: me@example.com
     grafana_data_path: /var/lib/grafana
     grafana_etc_path: /etc/grafana
+    grafana_bind_address: 127.0.0.1
     grafana_admin_user: admin
     grafana_admin_password: admin
     grafana_config:
