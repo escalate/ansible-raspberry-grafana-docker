@@ -11,8 +11,12 @@ ExecStartPre=/usr/bin/docker pull grafana/grafana:{{ grafana_docker_image_versio
 ExecStart=/usr/bin/docker run \
 --init \
 --memory={{ grafana_docker_memory }} \
+{% if grafana_env_vars | dict2items | length > 0 %}
 --env-file={{ grafana_etc_path }}/grafana.env \
+{% endif %}
+{% if grafana_docker_labels | dict2items | length > 0 %}
 --label-file={{ grafana_etc_path }}/grafana.label \
+{% endif %}
 --mount=type=bind,source={{ grafana_data_path }},destination=/var/lib/grafana \
 --mount=type=bind,source={{ grafana_etc_path }},destination=/etc/grafana \
 --name %n \
