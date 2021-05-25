@@ -98,7 +98,7 @@ def test_grafana_docker_container(host):
     d = host.docker("grafana.service").inspect()
     assert d["HostConfig"]["Memory"] == 1073741824
     assert d["Config"]["Image"] == "grafana/grafana:latest"
-    assert d["Config"]["Labels"]["maintainer"] == '"me@example.com"'
+    assert d["Config"]["Labels"]["maintainer"] == "me@example.com"
     assert "GF_LOG_LEVEL=INFO" in d["Config"]["Env"]
 
 
