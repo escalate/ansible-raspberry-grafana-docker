@@ -38,7 +38,7 @@ def test_grafana_config(host):
                 "\n"
                 "[security]\n"
                 "admin_user = admin\n"
-                "admin_password = admin\n"
+                "admin_password = admin"
     )
     assert config in f.content_string
 
