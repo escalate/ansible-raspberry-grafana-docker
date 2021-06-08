@@ -99,6 +99,9 @@ def test_grafana_docker_container(host):
     assert d["HostConfig"]["Memory"] == 1073741824
     assert d["Config"]["Image"] == "grafana/grafana:latest"
     assert d["Config"]["Labels"]["maintainer"] == "me@example.com"
+    assert "internal" in d["NetworkSettings"]["Networks"]
+    assert \
+        "grafana" in d["NetworkSettings"]["Networks"]["internal"]["Aliases"]
     assert "GF_LOG_LEVEL=INFO" in d["Config"]["Env"]
 
 

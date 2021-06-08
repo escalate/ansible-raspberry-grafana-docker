@@ -5,6 +5,7 @@
     grafana_docker_memory: 1G
     grafana_docker_labels:
       maintainer: me@example.com
+    grafana_docker_network: internal
     grafana_data_path: /var/lib/grafana
     grafana_etc_path: /etc/grafana
     grafana_bind_address: 127.0.0.1
