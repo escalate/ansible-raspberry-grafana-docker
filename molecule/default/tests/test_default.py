@@ -33,12 +33,12 @@ def test_grafana_config(host):
     assert f.group == "root"
 
     config = (
-                "[server]\n"
-                "root_url = http://localhost:3000\n"
-                "\n"
-                "[security]\n"
-                "admin_user = admin\n"
-                "admin_password = admin"
+        "[server]\n"
+        "root_url = http://localhost:3000\n"
+        "\n"
+        "[security]\n"
+        "admin_user = admin\n"
+        "admin_password = admin"
     )
     assert config in f.content_string
 
@@ -51,11 +51,11 @@ def test_grafana_datasources(host):
     assert f.group == "root"
 
     config = (
-                "apiVersion: 1\n"
-                "datasources:\n"
-                "- access: proxy\n"
-                "  name: Graphite\n"
-                "  type: graphite\n"
+        "apiVersion: 1\n"
+        "datasources:\n"
+        "- access: proxy\n"
+        "  name: Graphite\n"
+        "  type: graphite\n"
     )
     assert config in f.content_string
 
@@ -68,14 +68,14 @@ def test_grafana_dashboards(host):
     assert f.group == "root"
 
     config = (
-                "apiVersion: 1\n"
-                "providers:\n"
-                "- name: dashboards\n"
-                "  options:\n"
-                "    foldersFromFilesStructure: true\n"
-                "    path: /etc/grafana/dashboards\n"
-                "  type: file\n"
-                "  updateIntervalSeconds: 30\n"
+        "apiVersion: 1\n"
+        "providers:\n"
+        "- name: dashboards\n"
+        "  options:\n"
+        "    foldersFromFilesStructure: true\n"
+        "    path: /etc/grafana/dashboards\n"
+        "  type: file\n"
+        "  updateIntervalSeconds: 30\n"
     )
     assert config in f.content_string
 
