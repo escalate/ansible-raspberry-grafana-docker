@@ -1,8 +1,6 @@
 roles:
   - name: common
-    src: https://github.com/escalate/ansible-raspberry-common.git
-    scm: git
+    src: escalate.common
 
   - name: docker
-    src: https://github.com/escalate/ansible-raspberry-docker.git
-    scm: git
+    src: escalate.docker
