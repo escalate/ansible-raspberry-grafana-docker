@@ -96,7 +96,7 @@
   notify: Restart grafana service
 
 - name: Pull Docker image
-  community.general.docker_image:
+  community.docker.docker_image:
     name: "grafana/grafana:{{ grafana_docker_image_version }}"
     source: pull
 
