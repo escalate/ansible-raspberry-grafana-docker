@@ -144,6 +144,7 @@
     force_basic_auth: true
     status_code: 200
     return_content: true
+  no_log: true
   register: grafana_user_list
 
 - name: Add users
@@ -164,6 +165,7 @@
         "password":"{{ item.password }}"
       }
     status_code: 200
+  no_log: true
   loop: "{{ grafana_users }}"
   when: item.login not in (grafana_user_list.json | map(attribute='login') | list)
 
