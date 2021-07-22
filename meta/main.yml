@@ -16,5 +16,6 @@ galaxy_info:
     - raspberrypi
     - systemd
     - docker
+    - container
     - grafana
 dependencies: []
