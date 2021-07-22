@@ -23,7 +23,7 @@ ExecStart=/usr/bin/docker run \
 --network={{ grafana_docker_network }} \
 --network-alias=grafana \
 --publish=127.0.0.1:3000:3000 \
---user=grafana:root \
+--user=10100:0 \
 grafana/grafana:{{ grafana_docker_image_version }}
 ExecStop=/usr/bin/docker stop %n
 SyslogIdentifier=%n
