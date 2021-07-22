@@ -14,15 +14,15 @@ def test_writeable_directories(host):
     """Check writeable directories"""
     d = host.file("/var/lib/grafana")
     assert d.is_directory
-    assert d.user == "nobody"
-    assert d.group == "nogroup"
-    assert d.mode == 0o700
+    assert d.user == "grafana"
+    assert d.group == "root"
+    assert d.mode == 0o775
 
     b = host.file("/var/backups/grafana")
     assert b.is_directory
-    assert b.user == "nobody"
-    assert b.group == "nogroup"
-    assert b.mode == 0o755
+    assert b.user == "grafana"
+    assert b.group == "root"
+    assert b.mode == 0o775
 
 
 def test_grafana_config(host):

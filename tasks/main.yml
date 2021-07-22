@@ -1,3 +1,11 @@
+- name: Create application user
+  ansible.builtin.user:
+    name: grafana
+    uid: 10100
+    group: root
+    create_home: false
+    shell: /sbin/nologin
+
 - name: Create read-only directories
   ansible.builtin.file:
     path: "{{ item }}"
@@ -18,17 +26,17 @@
   ansible.builtin.file:
     path: "{{ grafana_data_path }}"
     state: directory
-    owner: nobody
-    group: nogroup
-    mode: 0700
+    owner: grafana
+    group: root
+    mode: 0775
 
 - name: Create writeable backup directory
   ansible.builtin.file:
     path: "{{ grafana_backup_path }}"
     state: directory
-    owner: nobody
-    group: nogroup
-    mode: 0755
+    owner: grafana
+    group: root
+    mode: 0775
 
 - name: Create service configuration
   ansible.builtin.template:
@@ -76,8 +84,8 @@
   ansible.builtin.copy:
     src: "{{ item }}"
     dest: "{{ grafana_etc_path }}/dashboards"
-    owner: nobody
-    group: nogroup
+    owner: grafana
+    group: root
     mode: 0644
   with_fileglob:
     - static_files/grafana/*.json
