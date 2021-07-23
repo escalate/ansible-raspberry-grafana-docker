@@ -50,7 +50,7 @@
 
 - name: Define environment variables
   community.general.ini_file:
-    path: "/etc/grafana.env"
+    path: /etc/grafana.env
     section: ""
     option: "{{ item.key }}"
     value: "{{ item.value }}"
@@ -92,7 +92,7 @@
 
 - name: Define Docker container labels
   community.general.ini_file:
-    path: "/etc/grafana.label"
+    path: /etc/grafana.label
     section: ""
     option: "{{ item.key }}"
     value: "{{ item.value }}"
