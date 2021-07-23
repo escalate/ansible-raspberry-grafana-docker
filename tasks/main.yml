@@ -6,7 +6,7 @@
     create_home: false
     shell: /sbin/nologin
 
-- name: Create read-only directories
+- name: Create config directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
@@ -22,7 +22,7 @@
     - "{{ grafana_etc_path }}/provisioning/notifiers"
     - "{{ grafana_etc_path }}/provisioning/plugins"
 
-- name: Create writeable data directory
+- name: Create data directory
   ansible.builtin.file:
     path: "{{ grafana_data_path }}"
     state: directory
@@ -30,7 +30,7 @@
     group: root
     mode: 0775
 
-- name: Create writeable backup directory
+- name: Create backup directory
   ansible.builtin.file:
     path: "{{ grafana_backup_path }}"
     state: directory
