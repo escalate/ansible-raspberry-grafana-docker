@@ -1,8 +1,8 @@
 """Role testing files using testinfra"""
 
 
-def test_read_only_directories(host):
-    """Check read-only directories"""
+def test_config_directory(host):
+    """Check config directory"""
     f = host.file("/etc/grafana")
     assert f.is_directory
     assert f.user == "root"
@@ -10,14 +10,17 @@ def test_read_only_directories(host):
     assert f.mode == 0o755
 
 
-def test_writeable_directories(host):
-    """Check writeable directories"""
+def test_data_directory(host):
+    """Check data directory"""
     d = host.file("/var/lib/grafana")
     assert d.is_directory
     assert d.user == "grafana"
     assert d.group == "root"
     assert d.mode == 0o775
 
+
+def test_backup_directory(host):
+    """Check backup directory"""
     b = host.file("/var/backups/grafana")
     assert b.is_directory
     assert b.user == "grafana"
