@@ -185,8 +185,8 @@
 
 - name: Create backup script
   ansible.builtin.template:
-    src: backup_grafana.sh.j2
-    dest: /usr/local/bin/backup_grafana.sh
+    src: backup-grafana.sh.j2
+    dest: /usr/local/bin/backup-grafana.sh
     owner: root
     group: root
     mode: 0755
@@ -196,5 +196,5 @@
     name: Backup Grafana
     minute: "0"
     hour: "4"
-    job: "/usr/local/bin/backup_grafana.sh || echo \"ERROR: A problem occurred during backup of Grafana. Please check the logfiles. journalctl -t backup_grafana.sh\""  # noqa 204
+    job: "/usr/local/bin/backup-grafana.sh || echo \"ERROR: A problem occurred during backup of Grafana. Please check the logfiles. journalctl -t backup-grafana.sh\""  # noqa 204
     user: root

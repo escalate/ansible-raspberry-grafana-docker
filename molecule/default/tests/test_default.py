@@ -110,6 +110,6 @@ def test_grafana_docker_container(host):
 
 def test_backup_cron_job(host):
     """Check backup cron job"""
-    cmd = "/usr/local/bin/backup_grafana.sh"
+    cmd = "/usr/local/bin/backup-grafana.sh"
     f = host.file("/var/spool/cron/crontabs/root").content_string
     assert cmd in f
