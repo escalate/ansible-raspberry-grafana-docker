@@ -8,8 +8,6 @@
     grafana_docker_network: internal
     grafana_data_path: /var/lib/grafana
     grafana_etc_path: /etc/grafana
-    grafana_admin_user: admin
-    grafana_admin_password: admin
     grafana_config:
       server:
         root_url: http://localhost:3000
@@ -18,6 +16,8 @@
         admin_password: "{{ grafana_admin_password }}"
     grafana_env_vars:
       GF_LOG_LEVEL: INFO
+    grafana_admin_user: admin
+    grafana_admin_password: admin
     grafana_datasources:
       apiVersion: 1
       datasources:
