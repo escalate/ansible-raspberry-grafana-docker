@@ -18,6 +18,7 @@ ExecStart=/usr/bin/docker run \
 {% if grafana_docker_labels | dict2items | length > 0 %}
 --label-file=/etc/grafana.label \
 {% endif %}
+--mount=type=bind,source={{ grafana_backup_path }},destination=/var/backups/grafana \
 --mount=type=bind,source={{ grafana_data_path }},destination=/var/lib/grafana \
 --mount=type=bind,source={{ grafana_etc_path }},destination=/etc/grafana \
 --network={{ grafana_docker_network }} \
