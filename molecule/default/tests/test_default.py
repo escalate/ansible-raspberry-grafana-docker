@@ -58,7 +58,7 @@ def test_grafana_datasources(host):
         "datasources:\n"
         "- access: proxy\n"
         "  name: Graphite\n"
-        "  type: graphite\n"
+        "  type: graphite"
     )
     assert config in f.content_string
 
@@ -78,7 +78,7 @@ def test_grafana_dashboards(host):
         "    foldersFromFilesStructure: true\n"
         "    path: /etc/grafana/dashboards\n"
         "  type: file\n"
-        "  updateIntervalSeconds: 30\n"
+        "  updateIntervalSeconds: 30"
     )
     assert config in f.content_string
 
