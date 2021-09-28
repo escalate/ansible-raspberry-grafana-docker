@@ -49,16 +49,12 @@
   notify: Restart grafana service
 
 - name: Define environment variables
-  community.general.ini_file:
-    path: /etc/grafana.env
-    section: ""
-    option: "{{ item.key }}"
-    value: "{{ item.value }}"
-    no_extra_spaces: true
+  ansible.builtin.template:
+    src: grafana.env.j2
+    dest: /etc/grafana.env
     owner: root
     group: root
     mode: 0644
-  loop: "{{ grafana_env_vars | dict2items }}"
   notify: Restart grafana service
 
 - name: Create datasources configuration
@@ -91,16 +87,12 @@
     - static_files/grafana/*.json
 
 - name: Define Docker container labels
-  community.general.ini_file:
-    path: /etc/grafana.label
-    section: ""
-    option: "{{ item.key }}"
-    value: "{{ item.value }}"
-    no_extra_spaces: true
+  ansible.builtin.template:
+    src: grafana.label.j2
+    dest: /etc/grafana.label
     owner: root
     group: root
     mode: 0644
-  loop: "{{ grafana_docker_labels | dict2items }}"
   notify: Restart grafana service
 
 - name: Pull Docker image
