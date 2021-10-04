@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e -E -u -C -o pipefail
 
-exec 1> >(logger -t $(basename $0)) 2>&1
+exec 1> >(logger --tag $(basename $0)) 2>&1
 
-echo "Start Grafana backup job"
+echo "Start Grafana backup"
 
 BACKUP_DIR="{{ grafana_backup_path }}"
 BACKUP_FILE="{{ grafana_backup_path }}/grafana-db-$(date +%Y-%m-%d-%H-%M).bck"
@@ -28,4 +28,4 @@ bzip2 "${BACKUP_FILE}"
 echo "Delete old Grafana database backups"
 find "${BACKUP_DIR}" -name "*.bz2" -type f -mtime +14 -delete
 
-echo "Finish Grafana backup job"
+echo "Finish Grafana backup"
