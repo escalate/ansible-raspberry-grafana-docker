@@ -26,6 +26,6 @@ echo "Compress backup of Grafana database"
 bzip2 "${BACKUP_FILE}"
 
 echo "Delete old Grafana database backups"
-find "${BACKUP_DIR}" -name "*.bz2" -type f -mtime +14 -delete
+find "${BACKUP_DIR}" -name "*.bz2" -type f -mtime +7 -delete
 
 echo "Finish Grafana backup"
