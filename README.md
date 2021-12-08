@@ -2,7 +2,7 @@
 
 # Ansible Role: Raspberry - Grafana (Docker)
 
-An Ansible role that manages [Grafana](https://grafana.com/oss/grafana/) Docker container with systemd on Raspberry Pi OS.
+An Ansible role that manages [Grafana](https://grafana.com/oss/grafana/) Docker container with systemd on Raspberry Pi OS (Debian Bullseye).
 
 ## Install
 
