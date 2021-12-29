@@ -108,8 +108,19 @@ def test_grafana_docker_container(host):
         "grafana" in d["NetworkSettings"]["Networks"]["internal"]["Aliases"]
 
 
+def test_backup(host):
+    """Check if the backup runs successfully"""
+    cmd = host.run("/usr/local/bin/backup-grafana.sh")
+    assert cmd.succeeded
+
+
 def test_backup_cron_job(host):
-    """Check backup cron job"""
-    cmd = "/usr/local/bin/backup-grafana.sh"
-    f = host.file("/var/spool/cron/crontabs/root").content_string
-    assert cmd in f
+    """Check backup cron_job"""
+    f = host.file("/var/spool/cron/crontabs/root")
+    assert "/usr/local/bin/backup-grafana.sh" in f.content_string
+
+
+def test_restore(host):
+    """Check if the restore runs successfully"""
+    cmd = host.run("/usr/local/bin/restore-grafana.sh")
+    assert cmd.succeeded

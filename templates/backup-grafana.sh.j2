@@ -6,7 +6,7 @@ exec 1> >(logger --tag $(basename $0)) 2>&1
 echo "Start Grafana backup"
 
 BACKUP_DIR="{{ grafana_backup_path }}"
-BACKUP_FILE="{{ grafana_backup_path }}/grafana-db-$(date +%Y-%m-%d-%H-%M).bck"
+BACKUP_FILE="{{ grafana_backup_path }}/grafana-$(date +%Y-%m-%d-%H-%M).db"
 
 echo "Stop Grafana service"
 systemctl stop grafana.service
@@ -17,7 +17,7 @@ while [ "$(docker ps --all --quiet --filter status=running --filter name=grafana
 done
 
 echo "Create backup of Grafana database"
-sqlite3 "{{ grafana_data_path }}/grafana.db" ".backup ${BACKUP_FILE}"
+cp "{{ grafana_data_path }}/grafana.db" "${BACKUP_FILE}"
 
 echo "Start Grafana service"
 systemctl start grafana.service

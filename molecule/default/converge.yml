@@ -45,3 +45,8 @@
   roles:
     - role: ansible-raspberry-grafana-docker
       tags: grafana
+  post_tasks:
+    - name: Create marker file for restore
+      ansible.builtin.copy:
+        dest: /var/tmp/ALLOW_RESTORE_OF_GRAFANA
+        content: ""

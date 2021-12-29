@@ -169,16 +169,18 @@
     creates: "{{ grafana_data_path }}/plugins/{{ item }}"
   loop: "{{ grafana_plugins }}"
 
-- name: Install backup script prerequsite packages
-  ansible.builtin.apt:
-    name: sqlite3
-    state: present
-    update_cache: true
-
 - name: Create backup script
   ansible.builtin.template:
     src: backup-grafana.sh.j2
     dest: /usr/local/bin/backup-grafana.sh
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create restore script
+  ansible.builtin.template:
+    src: restore-grafana.sh.j2
+    dest: /usr/local/bin/restore-grafana.sh
     owner: root
     group: root
     mode: 0755

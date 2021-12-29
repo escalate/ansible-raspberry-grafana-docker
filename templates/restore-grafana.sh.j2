@@ -1,0 +1,41 @@
+#!/bin/bash
+set -e -E -u -C -o pipefail
+
+exec 1> >(logger --stderr --tag $(basename $0)) 2>&1
+
+if [[ "$EUID" -ne 0 ]] ; then echo "Please run as root" ; exit 1 ; fi
+
+echo "Start restore of Grafana"
+
+RESTORE_MARKER="/var/tmp/ALLOW_RESTORE_OF_GRAFANA"
+
+if [ ! -f "${RESTORE_MARKER}" ]; then
+    echo "Run - touch ${RESTORE_MARKER} - to allow restore of Grafana"
+    exit 1
+fi
+
+BACKUP_DIR="{{ grafana_backup_path }}"
+LAST_BACKUP_ARCHIVE="$(ls -t ${BACKUP_DIR}/grafana-*.bz2 | head --lines 1)"
+echo "Selected Grafana backup archive: ${LAST_BACKUP_ARCHIVE}"
+
+echo "Stop Grafana service"
+systemctl stop grafana.service
+
+while [ "$(docker ps --all --quiet --filter status=running --filter name=grafana.service)" ]; do
+    echo "Grafana service is still running - wait 5 secs"
+    sleep 5
+done
+
+echo "Decompress backup archive of Grafana database"
+bunzip2 "${LAST_BACKUP_ARCHIVE}"
+
+echo "Restore Grafana database"
+cp --force "${BACKUP_DIR}/$(basename --suffix .bz2 ${LAST_BACKUP_ARCHIVE})" "{{ grafana_data_path }}/grafana.db"
+
+echo "Start Grafana service"
+systemctl start grafana.service
+
+echo "Remove restore marker"
+rm "${RESTORE_MARKER}"
+
+echo "Finish restore of Grafana"
