@@ -115,7 +115,7 @@ def test_backup(host):
 
 
 def test_backup_cron_job(host):
-    """Check backup cron_job"""
+    """Check backup cron job"""
     f = host.file("/var/spool/cron/crontabs/root")
     assert "/usr/local/bin/backup-grafana.sh" in f.content_string
 
