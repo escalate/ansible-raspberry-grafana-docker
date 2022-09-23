@@ -22,7 +22,9 @@ ExecStart=/usr/bin/docker run \
 --mount=type=bind,source={{ grafana_data_path }},destination=/var/lib/grafana \
 --mount=type=bind,source={{ grafana_etc_path }},destination=/etc/grafana \
 --network={{ grafana_docker_network }} \
+{% if promtail_docker_network not in ['bridge', 'host', 'none'] %}
 --network-alias=grafana \
+{% endif %}
 --publish=127.0.0.1:3000:3000 \
 --user=10100:0 \
 grafana/grafana:{{ grafana_docker_image_version }}
