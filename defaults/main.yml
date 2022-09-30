@@ -2,6 +2,8 @@ grafana_docker_image_version: latest
 grafana_docker_memory: 1G
 grafana_docker_labels: {}
 grafana_docker_network: bridge
+grafana_docker_publish_ports:
+  - 127.0.0.1:3000:3000
 
 grafana_backup_path: /var/backups/grafana
 grafana_data_path: /var/lib/grafana
