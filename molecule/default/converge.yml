@@ -6,6 +6,8 @@
     grafana_docker_labels:
       maintainer: me@example.com
     grafana_docker_network: internal
+    grafana_docker_publish_ports:
+      - 127.0.0.1:3000:3000
     grafana_backup_path: /var/backups/grafana
     grafana_data_path: /var/lib/grafana
     grafana_etc_path: /etc/grafana
