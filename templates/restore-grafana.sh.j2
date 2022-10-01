@@ -19,9 +19,9 @@ LAST_BACKUP_ARCHIVE="$(ls -t ${BACKUP_DIR}/grafana-*.bz2 | head --lines 1)"
 echo "Selected Grafana backup archive: ${LAST_BACKUP_ARCHIVE}"
 
 echo "Stop Grafana service"
-systemctl stop grafana.service
+systemctl stop grafana
 
-while [ "$(docker ps --all --quiet --filter status=running --filter name=grafana.service)" ]; do
+while [ "$(docker ps --all --quiet --filter status=running --filter name=grafana)" ]; do
     echo "Grafana service is still running - wait 5 secs"
     sleep 5
 done
@@ -33,7 +33,7 @@ echo "Restore Grafana database"
 cp --force "${BACKUP_DIR}/$(basename --suffix .bz2 ${LAST_BACKUP_ARCHIVE})" "{{ grafana_data_path }}/grafana.db"
 
 echo "Start Grafana service"
-systemctl start grafana.service
+systemctl start grafana
 
 echo "Remove restore marker"
 rm "${RESTORE_MARKER}"

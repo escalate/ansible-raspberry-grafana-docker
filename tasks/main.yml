@@ -163,7 +163,7 @@
 
 - name: Install plugins
   ansible.builtin.command: |
-    docker exec --interactive grafana.service \
+    docker exec --interactive grafana \
     grafana-cli plugins install {{ item }}
   args:
     creates: "{{ grafana_data_path }}/plugins/{{ item }}"
