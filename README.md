@@ -19,7 +19,7 @@ Please see [defaults/main.yml](https://github.com/escalate/ansible-raspberry-gra
 This role relies on the following dependencies:
 
 * Roles: [requirements.yml](https://github.com/escalate/ansible-raspberry-grafana-docker/blob/master/requirements.yml)
-* Collections: [collections.yml](https://github.com/escalate/ansible-raspberry-grafana-docker/blob/master/collections.yml)
+* Collections: [requirements.yml](https://github.com/escalate/ansible-raspberry-grafana-docker/blob/master/requirements.yml)
 
 ## Example Playbook
 
