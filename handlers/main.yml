@@ -3,3 +3,4 @@
     name: grafana
     state: restarted
     daemon_reload: true
+  when: not grafana_service_started.changed

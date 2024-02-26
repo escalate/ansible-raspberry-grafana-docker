@@ -109,10 +109,16 @@
     mode: 0644
   notify: Restart grafana service
 
-- name: Start and enable service
+- name: Start service
   ansible.builtin.systemd:
     name: grafana
     state: started
+    daemon_reload: true
+  register: grafana_service_started
+
+- name: Enable service
+  ansible.builtin.systemd:
+    name: grafana
     enabled: true
     daemon_reload: true
 
