@@ -12,7 +12,7 @@
     state: directory
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
   loop:
     - "{{ grafana_etc_path }}"
     - "{{ grafana_etc_path }}/dashboards"
@@ -28,7 +28,7 @@
     state: directory
     owner: grafana
     group: root
-    mode: 0775
+    mode: "0775"
 
 - name: Create backup directory
   ansible.builtin.file:
@@ -36,7 +36,7 @@
     state: directory
     owner: grafana
     group: root
-    mode: 0775
+    mode: "0775"
 
 - name: Create service configuration
   ansible.builtin.template:
@@ -44,7 +44,7 @@
     dest: "{{ grafana_etc_path }}/grafana.ini"
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   no_log: true
   notify: Restart grafana service
 
@@ -54,7 +54,7 @@
     dest: /etc/grafana.env
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   notify: Restart grafana service
 
 - name: Create datasources configuration
@@ -63,7 +63,7 @@
     dest: "{{ grafana_etc_path }}/provisioning/datasources/datasources.yml"
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   no_log: true
   notify: Restart grafana service
 
@@ -73,7 +73,7 @@
     dest: "{{ grafana_etc_path }}/provisioning/dashboards/dashboards.yml"
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   notify: Restart grafana service
 
 - name: Create dashboards
@@ -82,7 +82,7 @@
     dest: "{{ grafana_etc_path }}/dashboards"
     owner: grafana
     group: root
-    mode: 0644
+    mode: "0644"
   with_fileglob:
     - static_files/grafana/*.json
 
@@ -92,7 +92,7 @@
     dest: /etc/grafana.label
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   notify: Restart grafana service
 
 - name: Pull Docker image
@@ -106,7 +106,7 @@
     dest: /etc/systemd/system/grafana.service
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   notify: Restart grafana service
 
 - name: Start service
@@ -181,7 +181,7 @@
     dest: /usr/local/bin/backup-grafana.sh
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
 
 - name: Create restore script
   ansible.builtin.template:
@@ -189,7 +189,7 @@
     dest: /usr/local/bin/restore-grafana.sh
     owner: root
     group: root
-    mode: 0755
+    mode: "0755"
 
 - name: Add backup cron job
   ansible.builtin.cron:
