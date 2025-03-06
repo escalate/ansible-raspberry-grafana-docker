@@ -104,8 +104,7 @@ def test_grafana_docker_container(host):
     assert d["Config"]["Labels"]["maintainer"] == "me@example.com"
     assert "GF_LOG_LEVEL=INFO" in d["Config"]["Env"]
     assert "internal" in d["NetworkSettings"]["Networks"]
-    assert \
-        "grafana" in d["NetworkSettings"]["Networks"]["internal"]["Aliases"]
+    assert "grafana" in d["NetworkSettings"]["Networks"]["internal"]["Aliases"]
 
 
 def test_backup(host):
